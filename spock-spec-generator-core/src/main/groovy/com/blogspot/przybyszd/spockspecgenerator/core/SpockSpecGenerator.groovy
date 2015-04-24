@@ -1,9 +1,9 @@
-package com.blogspot.przybyszd.spockspecificationgenerator
+package com.blogspot.przybyszd.spockspecgenerator.core
 
-import com.blogspot.przybyszd.spockspecificationgenerator.domain.Block
-import com.blogspot.przybyszd.spockspecificationgenerator.domain.Scenario
-import com.blogspot.przybyszd.spockspecificationgenerator.domain.Spec
-import com.blogspot.przybyszd.spockspecificationgenerator.domain.Statement
+import com.blogspot.przybyszd.spockspecgenerator.core.domain.Block
+import com.blogspot.przybyszd.spockspecgenerator.core.domain.Scenario
+import com.blogspot.przybyszd.spockspecgenerator.core.domain.Spec
+import com.blogspot.przybyszd.spockspecgenerator.core.domain.Statement
 import groovyjarjarantlr.collections.AST
 import org.codehaus.groovy.antlr.parser.GroovyLexer
 import org.codehaus.groovy.antlr.parser.GroovyRecognizer

@@ -1,4 +1,4 @@
-package com.blogspot.przybyszd.testspecification
+package com.blogspot.przybyszd.spockspecgenerator.core.test
 
 import spock.lang.Narrative
 import spock.lang.Specification

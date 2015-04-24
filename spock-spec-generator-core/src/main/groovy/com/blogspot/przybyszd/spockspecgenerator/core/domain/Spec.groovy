@@ -1,4 +1,4 @@
-package com.blogspot.przybyszd.spockspecificationgenerator.domain
+package com.blogspot.przybyszd.spockspecgenerator.core.domain
 
 import groovy.transform.Immutable
 
