@@ -163,4 +163,58 @@ class SpockSpecGeneratorTest extends Specification {
                                                     block: Block.EXPECT)])
                     ])
     }
+
+    def "should generate spec with See annotation on class and methods"() {
+        given:
+            String code = this.class.getResource("/com/blogspot/przybyszd/testspecification/WithSeeSpec.groovy").text
+        when:
+            List<Spec> specs = sut.generateSpec(code)
+        then:
+            specs.size() == 1
+            specs[0] == new Spec(
+                    name: "com.blogspot.przybyszd.testspecification.WithSeeSpec",
+                    links: ['http://google.com', 'http://oracle.com'] as Set,
+                    scenarios: [
+                            new Scenario(
+                                    name: "length of empty string is zero",
+                                    links: ['http://test.com'] as Set,
+                                    statements: [
+                                            new Statement(
+                                                    block: Block.EXPECT)]),
+                            new Scenario(
+                                    name: "length should be positive",
+                                    links: ['http://length.com', 'http://hi.com'] as Set,
+                                    statements: [
+                                            new Statement(
+                                                    block: Block.EXPECT),
+                                            new Statement(
+                                                    block: Block.WHERE)])
+                    ])
+    }
+
+    def "should generate spec with Issue annotation on class and methods"() {
+        given:
+            String code = this.class.getResource("/com/blogspot/przybyszd/testspecification/WithIssueSpec.groovy").text
+        when:
+            List<Spec> specs = sut.generateSpec(code)
+        then:
+            specs.size() == 1
+            specs[0] == new Spec(
+                    name: "com.blogspot.przybyszd.testspecification.WithIssueSpec",
+                    issues: ['http://mantis.test/1', 'http://bugzilla.test/145'] as Set,
+                    scenarios: [
+                            new Scenario(
+                                    name: "length of empty string is zero",
+                                    issues: ['http://mantis.test/5'] as Set,
+                                    statements: [
+                                            new Statement(
+                                                    block: Block.EXPECT)]),
+                            new Scenario(
+                                    name: "length should be positive",
+                                    issues: ['http://mantis.test/132', 'http://bugzilla.test/1212'] as Set,
+                                    statements: [
+                                            new Statement(
+                                                    block: Block.EXPECT)])
+                    ])
+    }
 }

@@ -6,6 +6,8 @@ import groovy.transform.Immutable
 class Scenario {
     String name
     List<Statement> statements
+    Set<String> issues
+    Set<String> links
 
     boolean isValid() {
         !statements.isEmpty()

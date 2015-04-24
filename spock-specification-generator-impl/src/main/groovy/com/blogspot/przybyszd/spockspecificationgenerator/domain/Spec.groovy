@@ -9,6 +9,8 @@ class Spec {
     String description
     Set<Class> subjects
     List<Scenario> scenarios = []
+    Set<String> issues
+    Set<String> links
 
     boolean isValid() {
         !scenarios.isEmpty()

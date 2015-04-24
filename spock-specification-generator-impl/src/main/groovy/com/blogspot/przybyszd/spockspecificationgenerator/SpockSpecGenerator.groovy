@@ -8,9 +8,7 @@ import groovyjarjarantlr.collections.AST
 import org.codehaus.groovy.antlr.parser.GroovyLexer
 import org.codehaus.groovy.antlr.parser.GroovyRecognizer
 import org.codehaus.groovy.antlr.parser.GroovyTokenTypes
-import spock.lang.Narrative
-import spock.lang.Subject
-import spock.lang.Title
+import spock.lang.*
 
 import java.lang.reflect.Field
 
@@ -64,6 +62,8 @@ class SpockSpecGenerator {
                 title: getTitleFromClass(clazz),
                 description: getNarrativeFromClass(clazz),
                 subjects: getSubjectsFromClassAndFields(clazz) ?: null,
+                links: getSeesFromClass(clazz) ?: null,
+                issues: getIssuesFromClass(clazz) ?: null,
                 scenarios: classChildNodes
                         .find { isObjectBlockNode(it) }
                         .collect { getScenarios(it) }
@@ -80,18 +80,38 @@ class SpockSpecGenerator {
     private static List<Class> getSubjectsFromFields(List<Field> fields) {
         fields
                 .findAll { fieldHasSubjectAnnotation(it) }
-                .collectMany {
-            it.annotations
-                    .find { it instanceof Subject }
-                    .collect { it as Subject }
-                    .find()
-                    .value()
-                    .findAll { it != Void } ?: [it.type]
-        }
+                .collectMany { getSubjectClassesFromField(it) }
+    }
+
+    private static List<Class> getSubjectClassesFromField(Field field) {
+        field.annotations
+                .find { it instanceof Subject }
+                .collect { it as Subject }
+                .find()
+                .value()
+                .findAll { it != Void } ?: [field.type]
     }
 
     private static boolean fieldHasSubjectAnnotation(Field f) {
         f.annotations.find { it instanceof Subject } != null
+    }
+
+    private static Set<String> getIssuesFromClass(Class<?> clazz) {
+        clazz.annotations
+                .findAll { it instanceof Issue }
+                .collect { it as Issue }
+                .collect { it.value() }
+                .flatten()
+                .collect { it as String }
+    }
+
+    private static Set<String> getSeesFromClass(Class<?> clazz) {
+        clazz.annotations
+                .findAll { it instanceof See }
+                .collect { it as See }
+                .collect { it.value() }
+                .flatten()
+                .collect { it as String }
     }
 
     private static List<Class> getSubjectsFromClass(Class<?> clazz) {
@@ -156,13 +176,32 @@ class SpockSpecGenerator {
     }
 
     private static Scenario getScenarioFromMethod(AST method) {
+        String methodName = method.nextSibling.nextSibling
         new Scenario(
-                name: method.nextSibling.nextSibling,
+                name: methodName,
+                links: getAnnotationValues(method, 'See') ?: null,
+                issues: getAnnotationValues(method, 'Issue') ?: null,
                 statements:
                         getNodesOnTheSameLevel(method)
                                 .findAll { isStatementListNode(it) }
                                 .collectMany { getStatementsFromMethodStatements(it.firstChild) }
         )
+    }
+
+    private static Set<String> getAnnotationValues(AST method, String annotationName) {
+        getNodesOnTheSameLevel(method.firstChild)
+                .findAll { it.type == GroovyTokenTypes.ANNOTATION }
+                .collect { it.firstChild }
+                .findAll { it.text == annotationName }
+                .collect { it.nextSibling.firstChild.nextSibling }
+                .collectMany {
+            if (it.firstChild) {
+                it.firstChild.firstChild.collect { getNodesOnTheSameLevel(it) }.collect { it.firstChild.text }
+            } else {
+                [it.text]
+            }
+        }.flatten()
+                .collect { it as String }
     }
 
     private static boolean isMethodNode(AST fieldOrMethod) {
