@@ -47,6 +47,9 @@ public class GeneratorMojo extends AbstractMojo {
     @Parameter(required = false, readonly = true)
     private boolean mergeAndBlock = false;
 
+    @Parameter(required = false, readonly = true)
+    private boolean omitBlocksWithoutDescription = false;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         try {
@@ -119,6 +122,9 @@ public class GeneratorMojo extends AbstractMojo {
     private List<Statement> applyParameterToStatements(List<Statement> statements) {
         List<Statement> newStatements = new ArrayList<>();
         for (final Statement currentStatement : statements) {
+            if(omitBlocksWithoutDescription && currentStatement.getDescription() == null){
+                continue;
+            }
             if (omitBlocks.contains(currentStatement.getBlock())) {
                 continue;
             }
