@@ -53,17 +53,30 @@ public class GeneratorMojo extends AbstractMojo {
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         try {
+            debugPrintParameters();
+
             ClassLoader contextClassLoader = prepareClassLoader();
 
             List<File> spockFiles = getSpecificationGroovyFiles();
 
+            getLog().debug("Files to generate specification: " + spockFiles);
+
             List<Spec> specs = generateSpecificationModel(contextClassLoader, spockFiles);
+
+            getLog().debug("Generated specification model: " + specs);
 
             generateSpecificationReport(specs);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void debugPrintParameters() {
+        getLog().debug("Pattern: " + pattern);
+        getLog().debug("Omit blocks: " + omitBlocks);
+        getLog().debug("Merge And block: " + mergeAndBlock);
+        getLog().debug("Omit block without description: " + omitBlocksWithoutDescription);
     }
 
     private void generateSpecificationReport(List<Spec> specs) throws IOException, TemplateException {
@@ -85,13 +98,14 @@ public class GeneratorMojo extends AbstractMojo {
         List<Spec> specs = new ArrayList<>();
         for (File file : spockFiles) {
             specs.addAll(applyParameterToSpecs(SpockSpecGenerator.generateSpec(file, contextClassLoader)));
+            getLog().info("Generated specification model for file " + file.getAbsolutePath());
         }
         return specs;
     }
 
     private List<Spec> applyParameterToSpecs(List<Spec> specs) {
         List<Spec> newSpecs = new ArrayList<>();
-        for(Spec spec : specs){
+        for (Spec spec : specs) {
             Spec newSpec = new Spec(
                     spec.getName(),
                     spec.getTitle(),
@@ -107,7 +121,7 @@ public class GeneratorMojo extends AbstractMojo {
 
     private List<Scenario> applyParameterToScenarios(List<Scenario> scenarios) {
         List<Scenario> newScenarios = new ArrayList<>();
-        for(Scenario scenario : scenarios){
+        for (Scenario scenario : scenarios) {
             Scenario newScenario = new Scenario(
                     scenario.getName(),
                     applyParameterToStatements(scenario.getStatements()),
@@ -122,7 +136,7 @@ public class GeneratorMojo extends AbstractMojo {
     private List<Statement> applyParameterToStatements(List<Statement> statements) {
         List<Statement> newStatements = new ArrayList<>();
         for (final Statement currentStatement : statements) {
-            if(omitBlocksWithoutDescription && currentStatement.getDescription() == null){
+            if (omitBlocksWithoutDescription && currentStatement.getDescription() == null) {
                 continue;
             }
             if (omitBlocks.contains(currentStatement.getBlock())) {
@@ -143,15 +157,15 @@ public class GeneratorMojo extends AbstractMojo {
 
     private String mergeDescriptionsWithAnd(Statement currentStatement, Statement lastStatement) {
         List<String> description = new ArrayList<>();
-        if (lastStatement.getDescription() != null){
+        if (lastStatement.getDescription() != null) {
             description.add(lastStatement.getDescription());
         }
-        if (currentStatement.getDescription() != null){
+        if (currentStatement.getDescription() != null) {
             description.add(currentStatement.getDescription());
         }
-        if(description.size() == 2){
+        if (description.size() == 2) {
             return description.get(0) + " and " + description.get(1);
-        }else if(description.size() == 1){
+        } else if (description.size() == 1) {
             return description.get(1);
         }
         return null;
