@@ -39,10 +39,13 @@ public class GeneratorMojo extends AbstractMojo {
     private MavenProject mavenProject;
 
     @Parameter(required = false, readonly = true)
-    String pattern = ".*\\.groovy$";
+    private String pattern = ".*\\.groovy$";
 
     @Parameter(required = false, readonly = true)
-    List<Block> omitBlocks = Arrays.asList(Block.WHERE);
+    private List<Block> omitBlocks = Collections.singletonList(Block.WHERE);
+
+    @Parameter(required = false, readonly = true)
+    private boolean mergeAndBlock = false;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -115,12 +118,43 @@ public class GeneratorMojo extends AbstractMojo {
 
     private List<Statement> applyParameterToStatements(List<Statement> statements) {
         List<Statement> newStatements = new ArrayList<>();
-        for(Statement statement : statements){
-            if(!omitBlocks.contains(statement.getBlock())){
-                newStatements.add(statement);
+        for (final Statement currentStatement : statements) {
+            if (omitBlocks.contains(currentStatement.getBlock())) {
+                continue;
+            }
+            if (shouldMergeAndBlock(newStatements, currentStatement)) {
+                final int lastStatementIndex = newStatements.size() - 1;
+                Statement lastStatement = newStatements.get(lastStatementIndex);
+                String newDescription = mergeDescriptionsWithAnd(currentStatement, lastStatement);
+                Statement newStatement = new Statement(lastStatement.getBlock(), newDescription);
+                newStatements.set(lastStatementIndex, newStatement);
+            } else {
+                newStatements.add(currentStatement);
             }
         }
         return newStatements;
+    }
+
+    private String mergeDescriptionsWithAnd(Statement currentStatement, Statement lastStatement) {
+        List<String> description = new ArrayList<>();
+        if (lastStatement.getDescription() != null){
+            description.add(lastStatement.getDescription());
+        }
+        if (currentStatement.getDescription() != null){
+            description.add(currentStatement.getDescription());
+        }
+        if(description.size() == 2){
+            return description.get(0) + " and " + description.get(1);
+        }else if(description.size() == 1){
+            return description.get(1);
+        }
+        return null;
+    }
+
+    private boolean shouldMergeAndBlock(List<Statement> newStatements, Statement currentStatement) {
+        return mergeAndBlock
+                && currentStatement.getBlock() == Block.AND
+                && !newStatements.isEmpty();
     }
 
     private List<File> getSpecificationGroovyFiles() {
