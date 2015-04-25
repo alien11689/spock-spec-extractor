@@ -2,7 +2,9 @@ package com.blogspot.przybyszd.spockspecgenerator.mavenplugin;
 
 import com.blogspot.przybyszd.spockspecgenerator.core.SpockSpecGenerator;
 import com.blogspot.przybyszd.spockspecgenerator.core.domain.Block;
+import com.blogspot.przybyszd.spockspecgenerator.core.domain.Scenario;
 import com.blogspot.przybyszd.spockspecgenerator.core.domain.Spec;
+import com.blogspot.przybyszd.spockspecgenerator.core.domain.Statement;
 import freemarker.template.*;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
@@ -76,12 +78,12 @@ public class GeneratorMojo extends AbstractMojo {
     private List<Spec> generateSpecificationModel(ClassLoader contextClassLoader, List<File> spockFiles) {
         List<Spec> specs = new ArrayList<>();
         for (File file : spockFiles) {
-            specs.addAll(applyParameterToSpec(SpockSpecGenerator.generateSpec(file, contextClassLoader)));
+            specs.addAll(applyParameterToSpecs(SpockSpecGenerator.generateSpec(file, contextClassLoader)));
         }
         return specs;
     }
 
-    private List<Spec> applyParameterToSpec(List<Spec> specs) {
+    private List<Spec> applyParameterToSpecs(List<Spec> specs) {
         List<Spec> newSpecs = new ArrayList<>();
         for(Spec spec : specs){
             Spec newSpec = new Spec(
@@ -89,12 +91,36 @@ public class GeneratorMojo extends AbstractMojo {
                     spec.getTitle(),
                     spec.getDescription(),
                     spec.getSubjects(),
-                    spec.getScenarios(),
+                    applyParameterToScenarios(spec.getScenarios()),
                     spec.getIssues(),
                     spec.getLinks());
             newSpecs.add(newSpec);
         }
         return newSpecs;
+    }
+
+    private List<Scenario> applyParameterToScenarios(List<Scenario> scenarios) {
+        List<Scenario> newScenarios = new ArrayList<>();
+        for(Scenario scenario : scenarios){
+            Scenario newScenario = new Scenario(
+                    scenario.getName(),
+                    applyParameterToStatements(scenario.getStatements()),
+                    scenario.getIssues(),
+                    scenario.getLinks()
+            );
+            newScenarios.add(newScenario);
+        }
+        return newScenarios;
+    }
+
+    private List<Statement> applyParameterToStatements(List<Statement> statements) {
+        List<Statement> newStatements = new ArrayList<>();
+        for(Statement statement : statements){
+            if(!omitBlocks.contains(statement.getBlock())){
+                newStatements.add(statement);
+            }
+        }
+        return newStatements;
     }
 
     private List<File> getSpecificationGroovyFiles() {
