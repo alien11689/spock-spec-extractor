@@ -6,7 +6,6 @@ import com.blogspot.przybyszd.spockspecgenerator.core.domain.Spec
 import com.blogspot.przybyszd.spockspecgenerator.core.domain.Statement
 import groovyjarjarantlr.collections.AST
 import org.codehaus.groovy.antlr.parser.GroovyLexer
-import org.codehaus.groovy.antlr.parser.GroovyRecognizer
 import org.codehaus.groovy.antlr.parser.GroovyTokenTypes
 import spock.lang.*
 
@@ -60,7 +59,7 @@ class SpockSpecGenerator {
                 .find { isIdentifierNode(it) }
                 .text
         String fullClass = [packageName, className].join('.')
-        Class<?> clazz = Class.forName(fullClass, true, classLoader)
+        Class<?> clazz = Class.forName(fullClass, false, classLoader)
         new Spec(
                 name: fullClass,
                 title: getTitleFromClass(clazz),
@@ -157,7 +156,7 @@ class SpockSpecGenerator {
     }
 
     private static AST createAST(String code) {
-        new GroovyRecognizer(
+        new MyGroovyRecognizer(
                 new GroovyLexer(
                         new StringReader(code)).plumb()).with {
             p ->

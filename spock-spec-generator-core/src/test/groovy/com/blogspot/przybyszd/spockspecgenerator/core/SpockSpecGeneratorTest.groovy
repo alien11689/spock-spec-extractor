@@ -126,6 +126,25 @@ class SpockSpecGeneratorTest extends Specification {
                     ])
     }
 
+    def "should generate spec for only expect with and"() {
+        given:
+            String code = this.class.getResource("/com/blogspot/przybyszd/spockspecgenerator/core/test/OnlyExpectWithAnd.groovy").text
+        when:
+            List<Spec> specs = sut.generateSpec(code, getClass().classLoader)
+        then:
+            specs.size() == 1
+            specs[0] == new Spec(
+                    name: "com.blogspot.przybyszd.spockspecgenerator.core.test.OnlyExpectWithAnd",
+                    scenarios: [
+                            new Scenario(
+                                    name: "adding test",
+                                    statements: [
+                                            new Statement(block: Block.EXPECT),
+                                            new Statement(block: Block.AND)
+                                    ])
+                    ])
+    }
+
     def "should generate spec for only expect with Narrative annotation"() {
         given:
             String code = this.class.getResource("/com/blogspot/przybyszd/spockspecgenerator/core/test/OnlyExpectWithNarrative.groovy").text

@@ -7,5 +7,10 @@ enum Block {
     THEN,
     SETUP,
     GIVEN,
-    WHERE
+    WHERE,
+    AND;
+
+    String capitalized() {
+        "${name().charAt(0)}${name().substring(1).toLowerCase()}"
+    }
 }
