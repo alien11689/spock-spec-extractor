@@ -1,6 +1,7 @@
 package com.blogspot.przybyszd.spockspecgenerator.mavenplugin;
 
 import com.blogspot.przybyszd.spockspecgenerator.core.SpockSpecGenerator;
+import com.blogspot.przybyszd.spockspecgenerator.core.domain.Block;
 import com.blogspot.przybyszd.spockspecgenerator.core.domain.Spec;
 import freemarker.template.*;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
@@ -21,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
+import java.util.regex.Pattern;
 
 @Mojo(
         name = "generate",
@@ -33,6 +35,12 @@ import java.util.*;
 public class GeneratorMojo extends AbstractMojo {
     @Parameter(required = true, readonly = true, defaultValue = "${project}")
     private MavenProject mavenProject;
+
+    @Parameter(required = false, readonly = true)
+    String pattern = ".*\\.groovy$";
+
+    @Parameter(required = false, readonly = true)
+    List<Block> omitBlocks = Arrays.asList(Block.WHERE);
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -68,34 +76,31 @@ public class GeneratorMojo extends AbstractMojo {
     private List<Spec> generateSpecificationModel(ClassLoader contextClassLoader, List<File> spockFiles) {
         List<Spec> specs = new ArrayList<>();
         for (File file : spockFiles) {
-            try {
-                List<Spec> specsFromFile = new SpockSpecGenerator().generateSpec(file, contextClassLoader);
-                specs.addAll(specsFromFile);
-            } catch (Throwable e) {
-                System.err.println(e);
-                e.printStackTrace();
-            }
+            specs.addAll(applyParameterToSpec(SpockSpecGenerator.generateSpec(file, contextClassLoader)));
         }
         return specs;
     }
 
-    private Template getSpecificationTemplate() throws IOException {
-        Configuration cfg = new Configuration();
-
-        // Where do we load the templates from:
-        cfg.setClassForTemplateLoading(GeneratorMojo.class, "/templates");
-
-        // Some other recommended settings:
-        cfg.setIncompatibleImprovements(new Version(2, 3, 20));
-        cfg.setDefaultEncoding("UTF-8");
-        cfg.setLocale(Locale.US);
-        cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-        return cfg.getTemplate("spec.ftl");
+    private List<Spec> applyParameterToSpec(List<Spec> specs) {
+        List<Spec> newSpecs = new ArrayList<>();
+        for(Spec spec : specs){
+            Spec newSpec = new Spec(
+                    spec.getName(),
+                    spec.getTitle(),
+                    spec.getDescription(),
+                    spec.getSubjects(),
+                    spec.getScenarios(),
+                    spec.getIssues(),
+                    spec.getLinks());
+            newSpecs.add(newSpec);
+        }
+        return newSpecs;
     }
 
     private List<File> getSpecificationGroovyFiles() {
         List<String> testSources = mavenProject.getTestCompileSourceRoots();
         List<File> spockFiles = new ArrayList<>();
+        Pattern filePattern = Pattern.compile(pattern);
         for (String testSource : testSources) {
             File base = new File(testSource);
             Stack<File> stack = new Stack<>();
@@ -106,7 +111,7 @@ public class GeneratorMojo extends AbstractMojo {
                     for (File child : file.listFiles()) {
                         stack.push(child);
                     }
-                } else if (file.getAbsolutePath().endsWith(".groovy")) {
+                } else if (filePattern.matcher(file.getAbsolutePath()).matches()) {
                     spockFiles.add(file);
                 }
             }
@@ -116,12 +121,13 @@ public class GeneratorMojo extends AbstractMojo {
     }
 
     private ClassLoader prepareClassLoader() throws DependencyResolutionRequiredException, MalformedURLException {
-        Set<URL> urls = new HashSet<>();
         Set<String> elements = new HashSet<>();
         elements.addAll(mavenProject.getTestClasspathElements());
         elements.addAll(mavenProject.getRuntimeClasspathElements());
         elements.addAll(mavenProject.getSystemClasspathElements());
         elements.addAll(mavenProject.getCompileClasspathElements());
+
+        Set<URL> urls = new HashSet<>();
         for (String element : elements) {
             urls.add(new File(element).toURI().toURL());
         }
@@ -133,5 +139,15 @@ public class GeneratorMojo extends AbstractMojo {
         Thread.currentThread().setContextClassLoader(urlClassLoader);
 
         return urlClassLoader;
+    }
+
+    private Template getSpecificationTemplate() throws IOException {
+        Configuration cfg = new Configuration();
+        cfg.setClassForTemplateLoading(GeneratorMojo.class, "/templates");
+        cfg.setIncompatibleImprovements(new Version(2, 3, 20));
+        cfg.setDefaultEncoding("UTF-8");
+        cfg.setLocale(Locale.US);
+        cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+        return cfg.getTemplate("spec.ftl");
     }
 }

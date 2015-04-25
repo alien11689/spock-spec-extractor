@@ -12,11 +12,11 @@ import spock.lang.*
 import java.lang.reflect.Field
 
 class SpockSpecGenerator {
-    List<Spec> generateSpec(File testFile, ClassLoader classLoader) {
+    static List<Spec> generateSpec(File testFile, ClassLoader classLoader) {
         generateSpec(testFile.text, classLoader)
     }
 
-    List<Spec> generateSpec(String code, ClassLoader classLoader) {
+    static List<Spec> generateSpec(String code, ClassLoader classLoader) {
         AST ast = createAST(code)
         return getSpecs(ast, classLoader)
     }

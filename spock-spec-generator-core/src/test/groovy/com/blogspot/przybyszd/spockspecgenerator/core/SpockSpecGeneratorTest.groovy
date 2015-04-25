@@ -8,13 +8,11 @@ import spock.lang.Specification
 
 class SpockSpecGeneratorTest extends Specification {
 
-    SpockSpecGenerator sut = new SpockSpecGenerator()
-
     def "should generate spec for only expect with description spec"() {
         given:
             String code = this.class.getResource("/com/blogspot/przybyszd/spockspecgenerator/core/test/OnlyExpectWithDescriptionSpec.groovy").text
         when:
-            List<Spec> specs = sut.generateSpec(code, getClass().classLoader)
+            List<Spec> specs = SpockSpecGenerator.generateSpec(code, getClass().classLoader)
         then:
             specs.size() == 1
             specs[0] == new Spec(name: "com.blogspot.przybyszd.spockspecgenerator.core.test.OnlyExpectWithDescriptionSpec", scenarios: [
@@ -26,7 +24,7 @@ class SpockSpecGeneratorTest extends Specification {
         given:
             String code = this.class.getResource("/com/blogspot/przybyszd/spockspecgenerator/core/test/OnlyExpectWithoutDescriptionSpec.groovy").text
         when:
-            List<Spec> specs = sut.generateSpec(code, getClass().classLoader)
+            List<Spec> specs = SpockSpecGenerator.generateSpec(code, getClass().classLoader)
         then:
             specs.size() == 1
             specs[0] == new Spec(name: "com.blogspot.przybyszd.spockspecgenerator.core.test.OnlyExpectWithoutDescriptionSpec", scenarios: [
@@ -38,7 +36,7 @@ class SpockSpecGeneratorTest extends Specification {
         given:
             String code = this.class.getResource("/com/blogspot/przybyszd/spockspecgenerator/core/test/WhenThenWithDescriptionSpec.groovy").text
         when:
-            List<Spec> specs = sut.generateSpec(code, getClass().classLoader)
+            List<Spec> specs = SpockSpecGenerator.generateSpec(code, getClass().classLoader)
         then:
             specs.size() == 1
             specs[0] == new Spec(name: "com.blogspot.przybyszd.spockspecgenerator.core.test.WhenThenWithDescriptionSpec", scenarios: [
@@ -53,7 +51,7 @@ class SpockSpecGeneratorTest extends Specification {
         given:
             String code = this.class.getResource("/com/blogspot/przybyszd/spockspecgenerator/core/test/WithWhereSpec.groovy").text
         when:
-            List<Spec> specs = sut.generateSpec(code, getClass().classLoader)
+            List<Spec> specs = SpockSpecGenerator.generateSpec(code, getClass().classLoader)
         then:
             specs.size() == 1
             specs[0] == new Spec(name: "com.blogspot.przybyszd.spockspecgenerator.core.test.WithWhereSpec", scenarios: [
@@ -69,7 +67,7 @@ class SpockSpecGeneratorTest extends Specification {
         given:
             String code = this.class.getResource("/com/blogspot/przybyszd/spockspecgenerator/core/test/GivenExpectAndSetupExpectCleanupSpec.groovy").text
         when:
-            List<Spec> specs = sut.generateSpec(code, getClass().classLoader)
+            List<Spec> specs = SpockSpecGenerator.generateSpec(code, getClass().classLoader)
         then:
             specs.size() == 1
             specs[0] == new Spec(name: "com.blogspot.przybyszd.spockspecgenerator.core.test.GivenExpectAndSetupExpectCleanupSpec",
@@ -90,7 +88,7 @@ class SpockSpecGeneratorTest extends Specification {
         given:
             String code = this.class.getResource("/com/blogspot/przybyszd/spockspecgenerator/core/test/WithNoBlocksSpec.groovy").text
         when:
-            List<Spec> specs = sut.generateSpec(code, getClass().classLoader)
+            List<Spec> specs = SpockSpecGenerator.generateSpec(code, getClass().classLoader)
         then:
             specs.size() == 1
             specs[0] == new Spec(name: "com.blogspot.przybyszd.spockspecgenerator.core.test.WithNoBlocksSpec", scenarios: [
@@ -102,7 +100,7 @@ class SpockSpecGeneratorTest extends Specification {
         given:
             String code = this.class.getResource("/com/blogspot/przybyszd/spockspecgenerator/core/test/NoScenariosSpec.groovy").text
         when:
-            List<Spec> specs = sut.generateSpec(code, getClass().classLoader)
+            List<Spec> specs = SpockSpecGenerator.generateSpec(code, getClass().classLoader)
         then:
             specs.isEmpty()
     }
@@ -111,7 +109,7 @@ class SpockSpecGeneratorTest extends Specification {
         given:
             String code = this.class.getResource("/com/blogspot/przybyszd/spockspecgenerator/core/test/OnlyExpectWithTitle.groovy").text
         when:
-            List<Spec> specs = sut.generateSpec(code, getClass().classLoader)
+            List<Spec> specs = SpockSpecGenerator.generateSpec(code, getClass().classLoader)
         then:
             specs.size() == 1
             specs[0] == new Spec(
@@ -130,7 +128,7 @@ class SpockSpecGeneratorTest extends Specification {
         given:
             String code = this.class.getResource("/com/blogspot/przybyszd/spockspecgenerator/core/test/OnlyExpectWithAnd.groovy").text
         when:
-            List<Spec> specs = sut.generateSpec(code, getClass().classLoader)
+            List<Spec> specs = SpockSpecGenerator.generateSpec(code, getClass().classLoader)
         then:
             specs.size() == 1
             specs[0] == new Spec(
@@ -149,7 +147,7 @@ class SpockSpecGeneratorTest extends Specification {
         given:
             String code = this.class.getResource("/com/blogspot/przybyszd/spockspecgenerator/core/test/OnlyExpectWithNarrative.groovy").text
         when:
-            List<Spec> specs = sut.generateSpec(code, getClass().classLoader)
+            List<Spec> specs = SpockSpecGenerator.generateSpec(code, getClass().classLoader)
         then:
             specs.size() == 1
             specs[0] == new Spec(
@@ -168,7 +166,7 @@ class SpockSpecGeneratorTest extends Specification {
         given:
             String code = this.class.getResource("/com/blogspot/przybyszd/spockspecgenerator/core/test/OnlyExpectWithSubject.groovy").text
         when:
-            List<Spec> specs = sut.generateSpec(code, getClass().classLoader)
+            List<Spec> specs = SpockSpecGenerator.generateSpec(code, getClass().classLoader)
         then:
             specs.size() == 1
             specs[0] == new Spec(
@@ -187,7 +185,7 @@ class SpockSpecGeneratorTest extends Specification {
         given:
             String code = this.class.getResource("/com/blogspot/przybyszd/spockspecgenerator/core/test/WithSeeSpec.groovy").text
         when:
-            List<Spec> specs = sut.generateSpec(code, getClass().classLoader)
+            List<Spec> specs = SpockSpecGenerator.generateSpec(code, getClass().classLoader)
         then:
             specs.size() == 1
             specs[0] == new Spec(
@@ -215,7 +213,7 @@ class SpockSpecGeneratorTest extends Specification {
         given:
             String code = this.class.getResource("/com/blogspot/przybyszd/spockspecgenerator/core/test/WithIssueSpec.groovy").text
         when:
-            List<Spec> specs = sut.generateSpec(code, getClass().classLoader)
+            List<Spec> specs = SpockSpecGenerator.generateSpec(code, getClass().classLoader)
         then:
             specs.size() == 1
             specs[0] == new Spec(
