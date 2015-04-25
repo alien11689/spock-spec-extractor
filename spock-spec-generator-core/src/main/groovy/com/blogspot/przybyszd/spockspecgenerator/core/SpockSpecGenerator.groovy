@@ -13,12 +13,16 @@ import spock.lang.*
 import java.lang.reflect.Field
 
 class SpockSpecGenerator {
-    List<Spec> generateSpec(String code) {
-        AST ast = createAST(code)
-        return getSpecs(ast)
+    List<Spec> generateSpec(File testFile, ClassLoader classLoader) {
+        generateSpec(testFile.text, classLoader)
     }
 
-    private static List<Spec> getSpecs(AST ast) {
+    List<Spec> generateSpec(String code, ClassLoader classLoader) {
+        AST ast = createAST(code)
+        return getSpecs(ast, classLoader)
+    }
+
+    private static List<Spec> getSpecs(AST ast, ClassLoader classLoader) {
         List<AST> packageImportsClasses = getNodesOnTheSameLevel(ast)
         String packageName = packageImportsClasses
                 .findAll { it.type == GroovyTokenTypes.PACKAGE_DEF }
@@ -29,7 +33,7 @@ class SpockSpecGenerator {
         packageImportsClasses
                 .findAll { isClassNode(it) }
                 .collect { getNodesOnTheSameLevel(it.firstChild) }
-                .collect { classChildNodesToSpec(it, packageName) }
+                .collect { classChildNodesToSpec(it, packageName, classLoader) }
                 .findAll { it.isValid() }
     }
 
@@ -51,12 +55,12 @@ class SpockSpecGenerator {
         }
     }
 
-    private static Spec classChildNodesToSpec(List<AST> classChildNodes, String packageName) {
+    private static Spec classChildNodesToSpec(List<AST> classChildNodes, String packageName, ClassLoader classLoader) {
         String className = classChildNodes
                 .find { isIdentifierNode(it) }
                 .text
         String fullClass = [packageName, className].join('.')
-        Class<?> clazz = Class.forName(fullClass)
+        Class<?> clazz = Class.forName(fullClass, true, classLoader)
         new Spec(
                 name: fullClass,
                 title: getTitleFromClass(clazz),

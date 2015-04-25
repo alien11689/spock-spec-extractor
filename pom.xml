@@ -10,6 +10,8 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>spock-spec-generator-core</module>
+        <module>spock-spec-generator-maven-plugin</module>
+        <module>spock-spec-generator-it</module>
     </modules>
 
     <properties>
@@ -79,6 +81,11 @@
                 <artifactId>objenesis</artifactId>
                 <version>${objenesis.version}</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.blogspot.przybyszd</groupId>
+                <artifactId>spock-spec-generator-core</artifactId>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
