@@ -5,7 +5,7 @@
     <groupId>com.github.alien11689</groupId>
     <artifactId>spock-spec-extractor</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
     <modules>
         <module>spock-spec-extractor-core</module>
         <module>spock-spec-extractor-maven-plugin</module>
