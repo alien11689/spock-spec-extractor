@@ -1,5 +1,6 @@
 package com.blogspot.przybyszd.spockspecgenerator.it
 
+import spock.lang.Ignore
 import spock.lang.Issue
 import spock.lang.Narrative
 import spock.lang.See
@@ -28,5 +29,11 @@ class PersonTest extends Specification {
             firstName | lastName
             "John"    | "Smith"
             "Tom"     | "Jones"
+    }
+
+    @Ignore("Short ignore description")
+    def "ignore this test"(){
+        expect:
+            1 == 1
     }
 }

@@ -30,7 +30,8 @@ class PostModelGenerationProcessor {
                     spec.getSubjects(),
                     applyParameterToScenarios(spec.getScenarios()),
                     spec.getIssues(),
-                    spec.getLinks());
+                    spec.getLinks(),
+                    spec.getIgnored());
             newSpecs.add(newSpec);
         }
         return newSpecs;
@@ -43,7 +44,8 @@ class PostModelGenerationProcessor {
                     scenario.getName(),
                     applyParameterToStatements(scenario.getStatements()),
                     scenario.getIssues(),
-                    scenario.getLinks()
+                    scenario.getLinks(),
+                    scenario.getIgnored()
             );
             newScenarios.add(newScenario);
         }

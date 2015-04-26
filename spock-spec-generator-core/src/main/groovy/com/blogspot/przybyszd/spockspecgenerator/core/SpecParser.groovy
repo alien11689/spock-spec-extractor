@@ -1,9 +1,6 @@
 package com.blogspot.przybyszd.spockspecgenerator.core
 
-import com.blogspot.przybyszd.spockspecgenerator.core.domain.Block
-import com.blogspot.przybyszd.spockspecgenerator.core.domain.Scenario
-import com.blogspot.przybyszd.spockspecgenerator.core.domain.Spec
-import com.blogspot.przybyszd.spockspecgenerator.core.domain.Statement
+import com.blogspot.przybyszd.spockspecgenerator.core.domain.*
 import groovy.transform.PackageScope
 import groovyjarjarantlr.collections.AST
 
@@ -68,6 +65,7 @@ class SpecParser {
                 subjects: getSubjectsFromClassAndFields(clazz) ?: null,
                 links: getSeesFromClass(clazz) ?: null,
                 issues: getIssuesFromClass(clazz) ?: null,
+                ignored: getIgnoredFromClass(clazz),
                 scenarios: classChildNodes
                         .find { isObjectBlockNode(it) }
                         .collect { getScenarios(it) }
@@ -94,11 +92,22 @@ class SpecParser {
                 name: methodName,
                 links: getAnnotationValues(method, 'See') ?: null,
                 issues: getAnnotationValues(method, 'Issue') ?: null,
+                ignored: getIgnoredAnnotation(method),
                 statements:
                         getNodesOnTheSameLevel(method)
                                 .findAll { isStatementListNode(it) }
                                 .collectMany { getStatementsFromMethodStatements(it.firstChild) }
         )
+    }
+
+    private static Ignored getIgnoredAnnotation(AST method) {
+        getNodesOnTheSameLevel(method.firstChild)
+                .findAll { isAnnotationNode(it) }
+                .collect { it.firstChild }
+                .findAll { it.text == "Ignore" }
+                .collect {
+            new Ignored(it.nextSibling?.firstChild?.nextSibling?.text)
+        }.find()
     }
 
     private static Set<String> getAnnotationValues(AST method, String annotationName) {

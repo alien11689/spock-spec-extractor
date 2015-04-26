@@ -11,6 +11,7 @@ class Spec {
     List<Scenario> scenarios = []
     Set<String> issues
     Set<String> links
+    Ignored ignored
 
     boolean isValid() {
         !scenarios.isEmpty()

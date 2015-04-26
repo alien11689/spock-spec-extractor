@@ -8,6 +8,7 @@ class Scenario {
     List<Statement> statements
     Set<String> issues
     Set<String> links
+    Ignored ignored
 
     boolean isValid() {
         !statements.isEmpty()

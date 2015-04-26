@@ -32,6 +32,17 @@
         .className {
             font-style: italic;
         }
+
+        .specIgnored {
+            margin-left: 3%;
+            color: silver;
+        }
+
+        .scenarioIgnored {
+            margin-left: 5%;
+            color: silver;
+        }
+
     </style>
 </head>
 <body>
@@ -39,11 +50,23 @@
 
 <#list specs as spec>
 
-<div class="spec">
+    <#if spec.ignored??>
+    <div class="specIgnored">
+    <#else>
+    <div class="spec">
+    </#if>
     <#if spec.title??>
         <div class="specName">${spec.title}</div>
     <#else>
         <h2 class="specName">${spec.name}</h2>
+    </#if>
+    <#if spec.ignored??>
+        <div class="ignored">
+            Specification ignored
+            <#if spec.ignored.description??>
+                <br/>Reason: ${spec.ignored.description}
+            </#if>
+        </div>
     </#if>
 
     <div class="classNameHeader">Test class: <span class="className">${spec.name}</span></div>
@@ -84,41 +107,53 @@
     </#if>
 
     <#list spec.scenarios as scenario>
+        <#if scenario.ignored??>
+        <div class="scenarioIgnored">
+        <#else>
         <div class="scenario">
-            <div class="scenarioName">${scenario.name}</div>
-            <#if scenario.links??>
-                <div class="scenarioLinks">
-                    Links:
-                    <ul>
-                        <#list scenario.links as link>
-                            <li><a href="${link}">${link}</a></li>
-                        </#list>
-                    </ul>
-                </div>
-            </#if>
-            <#if scenario.issues??>
-                <div class="scenarioIssue">
-                    Issues:
-                    <ul>
-                        <#list scenario.issues as issue>
-                            <li><a href="${issue}">${issue}</a></li>
-                        </#list>
-                    </ul>
-                </div>
-            </#if>
-            <div class="scenarioSteps">
-                <ol>
-                    <#list scenario.statements as statement>
-                        <li>
-                        ${statement.block.capitalized()}
-                        <#if statement.description??>
-                        ${statement.description}
-                        </#if>
-                        </li>
-                    </#list>
-                </ol>
+        </#if>
+        <div class="scenarioName">${scenario.name}</div>
+        <#if scenario.ignored??>
+            <div class="ignored">
+                Scenario ignored
+                <#if scenario.ignored.description??>
+                    <br/>Reason: ${scenario.ignored.description}
+                </#if>
             </div>
+        </#if>
+        <#if scenario.links??>
+            <div class="scenarioLinks">
+                Links:
+                <ul>
+                    <#list scenario.links as link>
+                        <li><a href="${link}">${link}</a></li>
+                    </#list>
+                </ul>
+            </div>
+        </#if>
+        <#if scenario.issues??>
+            <div class="scenarioIssue">
+                Issues:
+                <ul>
+                    <#list scenario.issues as issue>
+                        <li><a href="${issue}">${issue}</a></li>
+                    </#list>
+                </ul>
+            </div>
+        </#if>
+        <div class="scenarioSteps">
+            <ol>
+                <#list scenario.statements as statement>
+                    <li>
+                    ${statement.block.capitalized()}
+                        <#if statement.description??>
+                    ${statement.description}
+                    </#if>
+                    </li>
+                </#list>
+            </ol>
         </div>
+    </div>
     </#list>
 </div>
 </#list>

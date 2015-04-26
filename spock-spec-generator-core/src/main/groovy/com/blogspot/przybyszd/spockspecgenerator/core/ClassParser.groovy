@@ -1,5 +1,6 @@
 package com.blogspot.przybyszd.spockspecgenerator.core
 
+import com.blogspot.przybyszd.spockspecgenerator.core.domain.Ignored
 import spock.lang.*
 
 import java.lang.reflect.Field
@@ -46,6 +47,14 @@ class ClassParser {
                 .collect { it.value() }
                 .flatten()
                 .collect { it as String }
+    }
+
+    static Ignored getIgnoredFromClass(Class<?> clazz) {
+        clazz.annotations
+                .findAll { it instanceof Ignore }
+                .collect { it as Ignore }
+                .collect { new Ignored(it.value()) }
+                .find()
     }
 
     private static List<Class> getSubjectsFromClass(Class<?> clazz) {

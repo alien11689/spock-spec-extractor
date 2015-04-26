@@ -1,6 +1,6 @@
 package com.blogspot.przybyszd.spockspecgenerator.mavenplugin;
 
-import com.blogspot.przybyszd.spockspecgenerator.core.SpockSpecGenerator;
+import com.blogspot.przybyszd.spockspecgenerator.core.SpecModelGenerator;
 import com.blogspot.przybyszd.spockspecgenerator.core.domain.Spec;
 import org.apache.maven.plugin.logging.Log;
 
@@ -18,7 +18,7 @@ class SpecificationModelGeneratorWrapper {
     List<Spec> generateSpecificationModel(ClassLoader contextClassLoader, List<File> spockFiles) {
         List<Spec> specs = new ArrayList<>();
         for (File file : spockFiles) {
-            specs.addAll(SpockSpecGenerator.generateSpec(file, contextClassLoader));
+            specs.addAll(SpecModelGenerator.generateSpec(file, contextClassLoader));
             log.info("Generated specification model for file " + file.getAbsolutePath());
         }
         return specs;

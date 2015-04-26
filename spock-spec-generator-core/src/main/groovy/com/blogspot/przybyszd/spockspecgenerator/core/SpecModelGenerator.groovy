@@ -3,7 +3,7 @@ package com.blogspot.przybyszd.spockspecgenerator.core
 import com.blogspot.przybyszd.spockspecgenerator.core.domain.Spec
 import groovyjarjarantlr.collections.AST
 
-class SpockSpecGenerator {
+class SpecModelGenerator {
     static List<Spec> generateSpec(File testFile, ClassLoader classLoader) {
         generateSpec(testFile.text, classLoader)
     }
