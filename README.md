@@ -29,3 +29,5 @@ You have to add plugin to pom.xml:
 ```
 
 Now run mvn with goal 'spock-spec-extractor:extract' or goal from phase equal or after 'process-test-classes'.
+
+Report file will be generated in target/specification/output.xml directory.
