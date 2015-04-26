@@ -4,14 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.blogspot.przybyszd</groupId>
-    <artifactId>spock-spec-generator</artifactId>
+    <groupId>com.github.alien11689</groupId>
+    <artifactId>spock-spec-extractor</artifactId>
     <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
     <modules>
-        <module>spock-spec-generator-core</module>
-        <module>spock-spec-generator-maven-plugin</module>
-        <module>spock-spec-generator-it</module>
+        <module>spock-spec-extractor-core</module>
+        <module>spock-spec-extractor-maven-plugin</module>
+        <module>spock-spec-extractor-it</module>
     </modules>
 
     <properties>
@@ -85,8 +85,8 @@
                 <version>${objenesis.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.blogspot.przybyszd</groupId>
-                <artifactId>spock-spec-generator-core</artifactId>
+                <groupId>com.github.alien11689</groupId>
+                <artifactId>spock-spec-extractor-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
