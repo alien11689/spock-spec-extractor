@@ -18,6 +18,15 @@
                 <artifactId>spock-spec-extractor-maven-plugin</artifactId>
                 <groupId>com.github.alien11689</groupId>
                 <version>0.0.1-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <id>extractor</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>extract</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
