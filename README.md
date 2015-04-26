@@ -4,7 +4,16 @@ If you write specification using [Spock Framework](http://spockframework.github.
 
 Maven plugin from this repository allows you to extract specification info from your tests and generate html report.
 
-**Actual plugin is under development so you have to build plugin manually**
+Add plugin repository to your pom.xml:
+```xml
+<pluginRepositories>
+    <pluginRepository>
+        <id>github-alien11689</id>
+        <name>alien11689's Git based repo</name>
+        <url>https://github.com/alien11689/maven-repo/raw/master/</url>
+    </pluginRepository>
+</pluginRepositories>
+```
 
 You have to add plugin to pom.xml:
 ```xml
@@ -13,7 +22,7 @@ You have to add plugin to pom.xml:
         <plugin>
             <artifactId>spock-spec-extractor-maven-plugin</artifactId>
             <groupId>com.github.alien11689</groupId>
-            <version>VERSION</version>
+            <version>0.0.1</version>
             <executions>
                 <execution>
                     <id>extractor</id>
