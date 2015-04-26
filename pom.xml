@@ -7,7 +7,7 @@
     <groupId>com.blogspot.przybyszd</groupId>
     <artifactId>spock-spec-generator</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
     <modules>
         <module>spock-spec-generator-core</module>
         <module>spock-spec-generator-maven-plugin</module>
@@ -22,6 +22,11 @@
         <spock.version>1.0-groovy-2.4</spock.version>
         <cglib.version>3.1</cglib.version>
         <objenesis.version>2.1</objenesis.version>
+        <maven-plugin-api.version>3.3.1</maven-plugin-api.version>
+        <freemarker.version>2.3.20</freemarker.version>
+        <maven-plugin-annotations.version>3.4</maven-plugin-annotations.version>
+        <maven-project.version>3.0-alpha-2</maven-project.version>
+        <maven-artifact.version>3.3.1</maven-artifact.version>
     </properties>
 
     <build>
@@ -64,7 +69,6 @@
                 <artifactId>groovy-all</artifactId>
                 <version>${groovy.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.spockframework</groupId>
                 <artifactId>spock-core</artifactId>
@@ -74,18 +78,41 @@
                 <groupId>cglib</groupId>
                 <artifactId>cglib-nodep</artifactId>
                 <version>${cglib.version}</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.objenesis</groupId>
                 <artifactId>objenesis</artifactId>
                 <version>${objenesis.version}</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>com.blogspot.przybyszd</groupId>
                 <artifactId>spock-spec-generator-core</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-plugin-api</artifactId>
+                <version>${maven-plugin-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven.plugin-tools</groupId>
+                <artifactId>maven-plugin-annotations</artifactId>
+                <version>${maven-plugin-annotations.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-project</artifactId>
+                <version>${maven-project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-artifact</artifactId>
+                <version>${maven-artifact.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.freemarker</groupId>
+                <artifactId>freemarker</artifactId>
+                <version>${freemarker.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

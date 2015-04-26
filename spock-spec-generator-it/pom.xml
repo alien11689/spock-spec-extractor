@@ -5,7 +5,7 @@
     <parent>
         <artifactId>spock-spec-generator</artifactId>
         <groupId>com.blogspot.przybyszd</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -17,7 +17,7 @@
             <plugin>
                 <artifactId>spock-spec-generator-maven-plugin</artifactId>
                 <groupId>com.blogspot.przybyszd</groupId>
-                <version>1.0-SNAPSHOT</version>
+                <version>0.0.1-SNAPSHOT</version>
                 <configuration>
                     <pattern>.*Test\.groovy$</pattern>
                 </configuration>
@@ -29,23 +29,20 @@
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>${groovy.version}</version>
         </dependency>
         <dependency>
             <groupId>org.spockframework</groupId>
             <artifactId>spock-core</artifactId>
-            <version>${spock.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib-nodep</artifactId>
-            <version>${cglib.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.objenesis</groupId>
             <artifactId>objenesis</artifactId>
-            <version>${objenesis.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
